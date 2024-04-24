@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { sendMail } = require("../utils/sendMail");
+const bcrypt = require("bcryptjs");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -124,7 +125,8 @@ const resetPassword = async (req, res) => {
   try {
     const { password, email, otp } = req.body;
     let foundUser = await User.findOne({ email, otp });
-
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
     if (!email) {
       return res.status(400).json({
         msg: "Bad request. Please add email in the request body",
