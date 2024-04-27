@@ -117,7 +117,7 @@ const updateCusPoints = async (CustomerPoints, originalreward) => {
 // };
 
 const updatePoints = async (req, res) => {
-  let { businessId, redeemedPoints, customerId } = req.body;
+  let { businessId, redeemedPoints, customerId, points } = req.body;
 
   try {
     let foundP = await cPoints.findOne({
@@ -140,8 +140,8 @@ const updatePoints = async (req, res) => {
         $push: {
           redeemHistory: {
             customerName: customer.name,
-            redeemedPoints,
-            dollar: (Number(redeemedPoints) * foundP.dollarPer100) / 100,
+            redeemedPoints: points,
+            dollar: (Number(points) * foundP.dollarPer100) / 100,
           },
         },
       }
