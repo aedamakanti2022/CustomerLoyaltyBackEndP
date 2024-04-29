@@ -37,7 +37,12 @@ const addPoints = async (req, res) => {
     rewardDollar,
     dollarPer100,
   } = req.body;
-
+  
+  let customer = await User.findOne({ customerId });
+  if (!customer) {
+    return res.status(404).json({ error: "Customer not found" });
+  }
+  
   const CustomerPoints = new cPoints({
     customerId: customerId,
     businessId: businessId,
