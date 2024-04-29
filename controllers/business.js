@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const Business = require("../models/business");
 const points = require("../models/businessPoints");
+const bcrypt = require("bcryptjs");
+
 const loginBusiness = async (req, res) => {
   const { email, password } = req.body;
 
@@ -159,7 +161,8 @@ const resetPasswordBusiness = async (req, res) => {
         msg: "No user found with this email or the otp is incorrect!",
       });
     }
-
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
     await Business.updateOne({ email: req.body.email }, { password, otp: "" });
     return res.status(200).json({
       msg: "Password reset successfully",
