@@ -148,7 +148,7 @@ const forgetPasswordBusiness = async (req, res) => {
 
 const resetPasswordBusiness = async (req, res) => {
   try {
-    const { password, email, otp } = req.body;
+    let { password, email, otp } = req.body;
     let foundUser = await Business.findOne({ email, otp });
 
     if (!email) {
