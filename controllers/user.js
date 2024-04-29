@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { sendMail } = require("../utils/sendMail");
+const bcrypt = require("bcryptjs");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -135,7 +136,8 @@ const resetPassword = async (req, res) => {
         msg: "No user found with this email or the otp is incorrect!",
       });
     }
-
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
     await User.updateOne({ email: req.body.email }, { password, otp: "" });
     return res.status(200).json({
       msg: "Password reset successfully",
